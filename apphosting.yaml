@@ -1,6 +1,4 @@
-# Settings for a Next.js app with a static export.
-# See https://firebase.google.com/docs/hosting/frameworks/nextjs?hl=en&gen=2nd#static-generation
-# for more information.
+# Settings for a Next.js app.
 runConfig:
   minInstances: 0
   maxInstances: 10
@@ -73,3 +71,4 @@ env:
     availability:
       - BUILD
       - RUNTIME
+buildCommand: npm run build

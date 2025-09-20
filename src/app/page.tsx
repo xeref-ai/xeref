@@ -1,16 +1,25 @@
+
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LogoSvg } from '@/components/icons';
 import { useAuth } from '@/lib/auth';
-import HomePage from './home/page';
 import { analytics } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
 
 export default function WelcomeOrHomePage() {
   const { user, isInitialLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isInitialLoading && user) {
+      router.push('/home');
+    }
+  }, [user, isInitialLoading, router]);
+
 
   const handleCTAClick = () => {
     if (analytics) {
@@ -18,7 +27,7 @@ export default function WelcomeOrHomePage() {
     }
   };
 
-  if (isInitialLoading) {
+  if (isInitialLoading || user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-background">
         <LogoSvg className="h-12 w-12 animate-spin text-primary" />

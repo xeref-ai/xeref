@@ -28,8 +28,5 @@ const nextConfig = {
     ]
   },
   output: 'standalone',
-  productionBrowserSourceMaps: true,
-  experimental: {
-    runtime: 'nodejs',
-  },
+  productionBrowserSourceMaps: true
 }
