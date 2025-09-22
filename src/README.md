@@ -66,13 +66,13 @@ use simple and easy-to-understand language
 -The application's user interface features a split-screen layout. The left side contains the chat area, an input area for new messages. The right side displays the list of tasks with their difficulty indicators and an input area for new
 
 ----
-https://www.bugrakarsli.com
+https://www.bugrakarsli.com/
 ---
 
 -Add a footer with the symbol
 -Great. Your task is keeping alive the Xeref
 ---
-https://www.bugrakarsli.com
+https://www.xeref.ai/
 ---
 
 -

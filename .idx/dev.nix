@@ -1,7 +1,8 @@
 {pkgs}: {
   channel = "stable-24.05";
   packages = [
-    pkgs.nodejs_20
+    pkgs.nodejs_20,
+    pkgs.terraform # Added Terraform for Infrastructure as Code
   ];
   idx.extensions = [
     
