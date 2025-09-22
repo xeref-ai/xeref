@@ -1,102 +1,33 @@
-# Xeref.ai
+# Source Code Directory (`/src`)
 
-## Description
+This directory contains the primary source code for the Xeref.ai Next.js application. It follows the standard structure for a modern Next.js project using the App Router.
 
-Xeref.ai is an application with an AI-powered assistant. Users can send messages and receive AI-generated responses.  It also includes a todo list application with an AI-powered feature. Users can add tasks by providing a description. The application then utilizes AI to automatically rank the task's difficulty as easy, medium, or hard.
+## Directory Structure
 
-## Features
+The source code is organized into the following key directories to ensure a clean separation of concerns:
 
-*   Send and receive messages with an AI-powered assistant using different AI agents (Llama 4 Scout, Gemini 2.5 pro, Optimus Alpha).
-*   Switch between Chat Mode and Agent Mode for different interaction styles.
-*   Add tasks with descriptions.
-*   AI automatically ranks task difficulty (Easy, Medium, Hard).
-*   Tasks can be marked as completed.
-*   Tasks are color-coded based on their AI-ranked difficulty:
-    *   Easy: Green
-    *   Medium: Orange/Yellow (Implicit, standard)
-    *   Hard: Red
-*   Archive completed tasks to declutter the main task list.
-*   Do not show the delete archieved button
-*   Reset the chat history.
-*   The user interface features a split-screen layout with chat on the left and a to-do list on the right.
-*   AI provides 3 auto generated ideas which is add to todo list
+-   **`/src/app`**: Core of the application, built on the Next.js App Router.
+    -   Contains all pages and user-facing routes (e.g., `/home`, `/login`).
+    -   Contains all backend API endpoints in the `/api` subdirectory (e.g., `/api/chat`, `/api/skool`, `/api/stripe`).
 
+-   **`/src/components`**: Contains all reusable React components.
+    -   `/src/components/ui`: Specifically holds components from the ShadCN UI library.
+    -   Other components are organized by feature or view (e.g., `chat-interface.tsx`, `tasks-view.tsx`).
 
-## Layout
-use simple and easy-to-understand language
+-   **`/src/lib`**: Contains core application logic, third-party service initializations, and utility functions.
+    -   `firebase.ts`: Client-side Firebase SDK initialization.
+    -   `firebase-admin.ts`: Server-side Firebase Admin SDK initialization.
+    -   `auth.tsx`: Authentication context and provider for managing user sessions.
+    -   `utils.ts`: General utility functions used throughout the application.
 
-#Fundamental Principles
--Write clean, simple, readable code.
--Reliability is the top priority - if you can’t make it reliable, don’t build it.
--Implement features in the simplest possible way.
--Keep files small and focused (<200 lines).
--Test after every meaningful change.
--Focus on core functionality before optimization.
--Use clear, consistent naming.
--Think thoroughly before coding. Write 2-3 reasoning paragraphs.
--Leave ego aside when debugging and fixing errors. You do not know anything.
+-   **`/src/ai`**: Dedicated to all Artificial Intelligence-related logic.
+    -   `ai-instance.ts`: Initializes the AI model instance.
+    -   `/src/ai/flows`: Contains specific AI-powered workflows, such as `cleanup-task.ts` or `enhance-prompt.ts`, which orchestrate calls to the AI model with specific instructions and schemas.
 
-#Error Fixing
--Consider multiple possible causes before deciding. Do not jump to conclusions.
--Explain the problem in plain English.
--Make minimal necessary changes, changing as few lines of code as possible.
--Always verify the fix.
--In case of strange errors, ask the user to perform a Perplexity web search to -find the latest up-to-date information.
+-   **`/src/hooks`**: Contains custom React hooks for managing stateful logic across components (e.g., `use-toast.ts`).
 
-#Building Process
--Understand requirements completely before starting.
--Plan the next steps in detail.
--Step 1: Answer all of the user’s questions and instructions, fully and completely.
--Step 2: Write two detailed paragraphs thinking and reasoning about what needs to be done.
--Step 3: List out the remaining necessary steps (if any), and choose which one to do next.
--Step 4: Write the code for the current step only!
--Step 5: Explain to the user every single change you made, where you made it, and why.
--Step 6: Give user concise instructions on how to test the new feature.
--Follow these steps in order. Do not skip any steps!
+## Key Files
 
-#GitHub Push Process (Follow these steps in order anytime the user wants to push to GitHub)
--Step 1: Inside of a code block, write the commit message for the user, clearly and concisely.
--Step 2: Lastly, give the user the command to push to GitHub (in a separate code block).
--Follow these steps in order. Do not skip any steps!
-
-#
--Do not do anything else if you are not sure! After test compilation you can proceed.
--Create a new folder.
--Create a new folder ifile and save that into Xeref.ai
--The application's user interface features a split-screen layout. The left side contains the chat area, an input area for new messages. The right side displays the list of tasks with their difficulty indicators and an input area for new
-
-----
-https://www.bugrakarsli.com/
----
-
--Add a footer with the symbol
--Great. Your task is keeping alive the Xeref
----
-https://www.xeref.ai/
----
-
--
-M
-E
-S
-S
-A
-G
-E
-
-X
-E
-R
-E
-F
-.
-.
-.
--
-
-
-
-
-
-
-
+-   **`src/middleware.ts`**: Handles request middleware for the application, used for tasks like authentication checks before a user can access a protected route.
+-   **`src/app/globals.css`**: Contains the global Tailwind CSS styles and definitions for the application.
+-   **`src/app/layout.tsx`**: The root layout for the entire application, defining the main HTML structure.
