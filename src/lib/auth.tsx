@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Effect for handling all redirection logic based on auth state
   useEffect(() => {
     if (!isInitialLoading) {
-      const publicPaths = ['/', '/login', '/new-login', '/pricing', '/terms', '/privacy', '/hiring', '/auth/action'];
+      const publicPaths = ['/', '/login', '/pricing', '/terms', '/privacy', '/hiring', '/auth/action'];
       const isPublicPath = publicPaths.some(p => pathname.startsWith(p));
 
       if (!user && !isPublicPath) {
