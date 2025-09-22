@@ -1,41 +1,50 @@
-# Xeref.ai
+# Xeref.ai - An AI Innovation Lab
 
-Xeref.ai is a full-stack web application designed as a central hub for AI-powered productivity and community engagement. It integrates a variety of AI models, task management features, and external services to provide a comprehensive user experience.
+Welcome to the public repository for Xeref.ai. This project is not a traditional B2B SaaS application; it is an **AI Innovation Lab** where we build in public, explore cutting-edge artificial intelligence, and share our findings.
 
-## Project Structure
+Our mission is to move beyond generic business applications and create bespoke, outcome-driven AI solutions that deliver measurable results. We document our journey, share our proof-of-concepts, and contribute to the broader conversation around AI implementation.
 
-The project is a Next.js application with TypeScript. The main components of the project are organized as follows:
+This repository serves as a living portfolio of our work, showcasing our technical credibility and our commitment to transparent innovation.
 
--   `src/app/`: This directory contains the main application pages and API routes.
-    -   `api/`: This subdirectory contains all of the backend API routes for the application.
-        -   `chat/`: This subdirectory contains the API routes for the chat functionality, including integrations with various AI models.
-        -   `skool/`: This subdirectory contains the API routes for the Skool integration.
-        -   `stripe/`: This subdirectory contains the API routes for the Stripe integration.
-    -   `(pages)/`: The `app` directory also contains the main pages for the application, such as the login page, the home page, and the pricing page.
--   `src/components/`: This directory contains the reusable React components used throughout the application.
--   `src/lib/`: This directory contains the core application logic, such as the AI model integrations, the chat service, and the Firebase integration.
--   `docs/`: This directory contains the project documentation, including the project blueprint and launch strategy.
+## The Vision: From Software to Strategic Partner
+
+We are repositioning Xeref.ai from a software vendor to a **strategic AI partner**. Our focus is on:
+
+-   **Custom Implementations:** Building tailored AI solutions that solve specific, high-impact business problems.
+-   **Outcome-Driven Results:** We measure success by the results we deliver, such as "2x faster decisions" or a "20% boost in accuracy."
+-   **Thought Leadership:** Sharing our research, insights, and the lessons we learn from building next-generation AI systems.
+
+This shift is aimed at collaborating directly with C-suite executives (CTOs, CIOs) who are looking to leverage AI for a strategic advantage.
 
 ## Getting Started
 
-To get started with the project, you will need to have Node.js and npm installed. You will also need to have a Firebase project set up with Firestore and Firebase Authentication enabled.
+### Firebase Project Architecture
 
-1.  Install the dependencies:
-    ```
+This project uses multiple Firebase projects to ensure a clear separation of concerns between environments. Before running the application, ensure you have access to the correct Firebase project for your needs.
+
+```
+📁 Firebase Organization (Master Account: bugrakarsli@gmail.com)
+├── 🚀 xeref-ai-production (Primary Owner: bugra@xeref.ai)
+├── 🧪 xeref-ai-staging    (Primary Owner: bugra@xeref.ai)
+└── 🔬 development-sandbox (Primary Owner: bugrakarsli@gmail.com)
+```
+
+### Local Setup
+
+1.  **Install Dependencies:**
+    ```bash
     npm install
     ```
-2.  Create a `.env.local` file with your Firebase project configuration.
-3.  Run the development server:
-    ```
+2.  **Environment Configuration:**
+    - Create a `.env.local` file.
+    - Populate it with the Firebase configuration credentials for the **`development-sandbox`** project.
+3.  **Run the Development Server:**
+    ```bash
     npm run dev
     ```
 
-This will start the development server on `http://localhost:3000`.
+This will start the development server on `http://localhost:3000`, connected to your development sandbox environment.
 
-## Key Pages
+## Join the Journey
 
--   `/login`: The main entry point for users, featuring an embedded introductory video.
--   `/`: The main application view, with a three-panel resizable layout.
--   `/pricing`: The pricing page with a four-tier subscription model.
--   `/changelog`: A page that displays the latest updates and changes to the application.
--   `/learning`: A hub for learning resources and tutorials.
+Our work here is part of a larger "Startup Diary" where we document our journey of building an AI innovation lab from the ground up. You can follow our progress and insights on [LinkedIn](https://www.linkedin.com/in/bugrakarsli/) and see our other projects on [GitHub](https://github.com/your-github-username).
