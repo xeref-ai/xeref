@@ -6,20 +6,20 @@ export function middleware(request: NextRequest) {
   const currentUser = request.cookies.get('currentUser')?.value
   const { pathname } = request.nextUrl
 
-  // Allow access to the root page for unauthenticated users
-  if (!currentUser && pathname === '/') {
-    return NextResponse.next();
-  }
+  const publicPaths = ['/', '/login', '/new-login', '/pricing', '/terms', '/privacy', '/hiring', '/auth/action'];
+  const isPublicPath = publicPaths.some(p => pathname.startsWith(p));
 
-  // If the user is authenticated and on the root path, redirect to /home
-  if (currentUser && pathname === '/') {
+  // If the user is authenticated and on a public path (like /login or /), redirect to /home
+  if (currentUser && isPublicPath && pathname !== '/home') {
     return NextResponse.redirect(new URL('/home', request.url));
   }
 
-  // If the user is unauthenticated and tries to access a protected route, redirect to /
-  if (!currentUser && pathname.startsWith('/home')) {
-    return NextResponse.redirect(new URL('/', request.url));
+  // If the user is unauthenticated and tries to access a protected route, redirect to login
+  if (!currentUser && !isPublicPath) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
+  
+  return NextResponse.next()
 }
 
 export const config = {
