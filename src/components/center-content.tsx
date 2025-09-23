@@ -337,8 +337,59 @@ export const CenterContent = ({
 
             <div className="px-4 pt-4 pb-2 max-w-3xl w-full mx-auto">
                 <form onSubmit={handleSendMessageWrapper}>
-                    <div className=".
-                                ..
+                    <div className="relative">
+                        {filePreview && (
+                            <div className="absolute bottom-full mb-2 w-full p-2 bg-gray-900 rounded-t-lg">
+                                <div className="flex items-center gap-2">
+                                    <Image src={filePreview} alt="File preview" width={40} height={40} className="rounded-md" />
+                                    <span className="text-sm truncate">{attachedFile?.name}</span>
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 ml-auto" onClick={() => { setFilePreview(null); setAttachedFile(null); }}>
+                                        <X size={16} />
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                        <div className="flex items-center p-2 rounded-lg bg-[#2C2D30] border border-gray-700">
+                             <Textarea
+                                ref={chatInputRef}
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Message Xeref..."
+                                className="flex-1 bg-transparent border-none focus:ring-0 resize-none text-base"
+                                rows={1}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && !e.shiftKey) {
+                                    handleSendMessageWrapper(e);
+                                  }
+                                }}
+                              />
+                            <div className="flex items-center space-x-1">
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => fileInputRef.current?.click()}>
+                                                <Paperclip size={18} />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent><p>Attach file</p></TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" />
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" className={cn("h-9 w-9", isListening && "bg-red-500/20")} onClick={handleToggleListening}>
+                                                {isListening ? <StopIcon className="h-5 w-5"/> : <AudioLines size={18} />}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent><p>{isListening ? "Stop listening" : "Voice input"}</p></TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <Button type="submit" size="icon" className="h-9 w-9" disabled={(!input.trim() && !attachedFile) || isLoading}>
+                                    {isLoading ? <Loader2 className="animate-spin" size={18}/> : <ArrowUp size={18} />}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

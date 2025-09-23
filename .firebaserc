@@ -1,25 +1,10 @@
 {
-  "projects": {
-    "default": "xerefai"
-  },
+  "projects": { "default": "xerefai" },
   "targets": {
     "xerefai": {
       "hosting": {
-        "www": [
-          "xerefai"
-        ],
-        "app": [
-          "app-xeref-ai"
-        ],
-        "docs": [
-          "docs-xeref-ai"
-        ],
-        "status": [
-          "status-xeref-ai"
-        ],
-        "studio": [
-          "studio-xeref-ai"
-        ]
+        "studio": ["studio-xeref-ai"],
+        "xeref": ["xerefai"]
       }
     }
   }

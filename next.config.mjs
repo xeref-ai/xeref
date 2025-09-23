@@ -1,35 +1,23 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'img.youtube.com',
-        port: '',
-        pathname: '/**',
+  webpack: (config, { isServer }) => {
+    // Force SWC to transpile undici
+    config.module.rules.push({
+      test: /node_modules\/undici\/.+\.js$/,
+      use: {
+        loader: 'next-swc-loader',
       },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**', // Allow any secure hostname
-      }
-    ]
-  },
-  output: 'standalone',
-  productionBrowserSourceMaps: true
-}
+    });
+
+    // Fallback for missing modules
+    config.resolve.fallback = {
+      "mongodb-client-encryption": false,
+      "aws4": false
+    };
+
+    return config;
+  }
+};
 
 export default nextConfig;

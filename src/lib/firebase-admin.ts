@@ -25,4 +25,11 @@ if (!admin.apps.length) {
 const adminDb = admin.apps.length > 0 ? admin.firestore() : null;
 const adminAuth = admin.apps.length > 0 ? admin.auth() : null;
 
-export { adminDb, adminAuth };
+// Placeholder for customInitApp
+const customInitApp = () => {
+    if (!admin.apps.length) {
+        console.warn("customInitApp called but Firebase Admin SDK not initialized.");
+    }
+};
+
+export { adminDb as db, adminAuth as auth, customInitApp };

@@ -1,3 +1,11 @@
 {
-  "mcpServers": {}
+  "xeref-mcp": {
+    "command": "node",
+    "args": ["./mcp-servers/xeref-mcp/index.js"],
+    "env": {
+      "FIREBASE_PROJECT_ID": "xerefai-project",
+      "NODE_ENV": "development"
+    },
+    "disabled": false
+  }
 }

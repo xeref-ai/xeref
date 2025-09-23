@@ -1,11 +1,11 @@
 
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { adminDb } from '@/lib/firebase-admin';
+import { db } from '@/lib/firebase-admin';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
-  if (!adminDb) {
+  if (!db) {
     return new NextResponse('Firebase Admin not initialized', { status: 500 });
   }
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const planId = subscription.items.data[0].price.id;
 
     if (userId) {
-      await adminDb.collection('users').doc(userId).update({
+      await db.collection('users').doc(userId).update({
         plan: planId,
         stripeCustomerId: subscription.customer,
       });

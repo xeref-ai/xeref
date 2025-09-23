@@ -1,15 +1,15 @@
 
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { db } from '@/lib/firebase-admin';
 
 export async function GET() {
-  if (!adminDb) {
+  if (!db) {
     return NextResponse.json({ status: 'error', error: 'Firebase Admin not initialized' }, { status: 500 });
   }
 
   try {
     // Check Firestore connection by getting a simple document
-    await adminDb.collection('health_check').doc('status').get();
+    await db.collection('health_check').doc('status').get();
     
     return NextResponse.json({ status: 'ok', timestamp: new Date().toISOString() });
   } catch (error) {

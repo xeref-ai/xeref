@@ -19,6 +19,8 @@ import {
 import { db, isFirebaseEnabled } from './firebase';
 import { type Task, type Idea, type UserContext } from './types';
 
+export { db };
+
 async function ensureNetwork(dbInstance: typeof db) {
     if (!dbInstance || !isFirebaseEnabled) throw new Error("Firestore is not initialized");
     try {

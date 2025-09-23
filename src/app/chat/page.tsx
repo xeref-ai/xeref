@@ -3,7 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ChatHeader } from '@/components/chat-header/chat-header';
-import ChatInterface from '@/components/chat/chat-interface';
+import { ChatInterface } from '@/components/chat/chat-interface';
 import { LogoSvg } from '@/components/icons';
 
 const ChatPage = () => {

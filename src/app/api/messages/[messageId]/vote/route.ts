@@ -1,9 +1,9 @@
 
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { db } from '@/lib/firebase-admin';
 
 export async function POST(req: Request) {
-  if (!adminDb) {
+  if (!db) {
     return new NextResponse('Firebase Admin not initialized', { status: 500 });
   }
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return new NextResponse('Message ID and vote are required', { status: 400 });
     }
 
-    await adminDb.collection('messages').doc(messageId).update({
+    await db.collection('messages').doc(messageId).update({
       vote,
     });
     
