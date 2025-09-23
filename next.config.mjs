@@ -23,10 +23,13 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
       },
       {
-        protocol: 'https'
+        protocol: 'https',
+        hostname: '**', // Allow any secure hostname
       }
     ]
   },
   output: 'standalone',
   productionBrowserSourceMaps: true
 }
+
+export default nextConfig;
