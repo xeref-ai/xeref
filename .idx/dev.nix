@@ -12,10 +12,11 @@
     
   ];
   idx.previews = {
+    enable = true; # Added this line
     previews = {
       web = {
-        # Simplified the command for a more stable, standard startup
-        command = ["npm", "run", "dev"];
+        # Updated the command to work with IDX
+        command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
         manager = "web";
       };
     };
