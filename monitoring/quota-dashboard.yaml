@@ -1,0 +1,28 @@
+displayName: "XerefAI Quota Management Dashboard"
+mosaicLayout:
+  tiles:
+    - width: 12
+      height: 6
+      widget:
+        title: "Cross-Environment Quota Usage"
+        xyChart:
+          dataSets:
+            - timeSeriesQuery:
+                timeSeriesFilter:
+                  filter: 'resource.type="cloud_function" AND resource.labels.function_name=~"quotaMonitor"'
+              plotType: STACKED_AREA
+              
+    - width: 6
+      height: 4
+      widget:
+        title: "Quota Exhaustion Predictions"
+        scorecard:
+          timeSeriesQuery:
+            unitOverride: "days"
+            
+    - width: 6
+      height: 4
+      widget:
+        title: "Critical Alerts"
+        alertChart:
+          name: "projects/xerefai/alertPolicies/quota-alerts"

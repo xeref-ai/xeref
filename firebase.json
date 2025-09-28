@@ -1,22 +1,26 @@
 {
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
   "hosting": [
     {
-      "target": "studio",
+      "target": "staging",
       "public": ".next",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{
-        "source": "**",
-        "run": { "serviceId": "studio", "region": "us-central1" }
-      }]
-    },
-    {
-      "target": "xeref",
-      "public": ".next",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{
-        "source": "**",
-        "run": { "serviceId": "xeref", "region": "us-central1" }
-      }]
+      "rewrites": [
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "xeref",
+            "region": "us-central1"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5002
+    }
+  }
 }

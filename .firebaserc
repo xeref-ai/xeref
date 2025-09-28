@@ -1,11 +1,16 @@
 {
-  "projects": { "default": "xerefai" },
+  "projects": {
+    "staging": "xerefai-staging",
+    "prod": "xerefai"
+  },
   "targets": {
-    "xerefai": {
+    "xerefai-staging": {
       "hosting": {
-        "studio": ["studio-xeref-ai"],
-        "xeref": ["xerefai"]
+        "staging": [
+          "studio-xeref-ai"
+        ]
       }
     }
-  }
+  },
+  "etags": {}
 }

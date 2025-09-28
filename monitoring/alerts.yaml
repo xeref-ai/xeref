@@ -1,0 +1,99 @@
+# monitoring/alerts.yaml
+#
+# This file defines the alerting policies for the XerefAI project.
+# These policies will be applied by the 'deploy-monitoring' job in the CI/CD pipeline.
+#
+
+# --- POLICY 1: Quota Management and Monitoring Health ---
+# This policy is linked to the "Critical Alerts" widget on the Quota Dashboard.
+- displayName: "Critical Quota and Monitoring Alerts"
+  name: "projects/xerefai/alertPolicies/quota-alerts"
+  combiner: "OR"
+  conditions:
+    # Condition 1.1: High Quota Usage (from IntelligentQuotaManager)
+    # Triggers when the custom metric for quota usage percentage exceeds 85% for 5 minutes.
+    - displayName: "High Quota Usage Detected"
+      conditionThreshold:
+        filter: 'metric.type="custom.googleapis.com/quota/usage_percentage" AND metric.label.severity="HIGH"'
+        comparison: "COMPARISON_GT"
+        thresholdValue: 85
+        duration: "300s" # 5 minutes
+        trigger:
+          count: 1
+          
+    # Condition 1.2: Quota Monitor Function Failure
+    # Triggers if the quotaMonitor Cloud Function has any execution errors over a 10-minute period.
+    - displayName: "Quota Monitoring Function Failed"
+      conditionThreshold:
+        filter: 'metric.type="cloudfunctions.googleapis.com/function/execution_count" AND resource.label.function_name="quotaMonitor" AND metric.label.status="error"'
+        comparison: "COMPARISON_GT"
+        thresholdValue: 0
+        duration: "600s" # 10 minutes
+        trigger:
+          count: 1
+          
+  alertStrategy:
+    notificationRateLimit:
+      period: "1800s" # 30 minutes
+  documentation:
+    content: "This policy triggers alerts for critical conditions related to resource quotas or the health of the monitoring system itself. Consult the Quota Management Dashboard for details."
+    mimeType: "text/markdown"
+  notificationChannels:
+    - "projects/xerefai/notificationChannels/placeholder-email"
+    - "projects/xerefai/notificationChannels/placeholder-pagerduty"
+
+---
+
+# --- POLICY 2: Application Performance & Health ---
+# This policy monitors the health of the core Cloud Run services.
+- displayName: "Application Performance & Health"
+  combiner: "OR"
+  conditions:
+    # Condition 2.1: High Memory Usage on Cloud Run
+    # Triggers if a production service's memory utilization exceeds 85% for 5 minutes.
+    - displayName: "High Memory Utilization on Production Service"
+      conditionThreshold:
+        filter: 'metric.type="run.googleapis.com/container/memory/utilization" AND resource.type="cloud_run_revision" AND resource.label.service_name="xeref"'
+        comparison: "COMPARISON_GT"
+        thresholdValue: 0.85
+        duration: "300s" # 5 minutes
+        trigger:
+          count: 1
+
+    # Condition 2.2: High Request Latency (95th percentile)
+    # Triggers if the 95th percentile of request latencies exceeds 10 seconds for 2 minutes.
+    - displayName: "High Request Latency on Production Service"
+      conditionThreshold:
+        filter: 'metric.type="run.googleapis.com/request_latencies" AND resource.type="cloud_run_revision" AND resource.label.service_name="xeref"'
+        comparison: "COMPARISON_GT"
+        thresholdValue: 10s
+        duration: "120s" # 2 minutes
+        aggregations:
+        - alignmentPeriod: "60s"
+          perSeriesAligner: "ALIGN_PERCENTILE_95"
+        trigger:
+          count: 1
+
+    # Condition 2.3: High Server Error Rate
+    # Triggers if there are more than 5 server-side (5xx) errors in a 5-minute period.
+    - displayName: "High Server Error Rate on Production Service"
+      conditionThreshold:
+        filter: 'metric.type="run.googleapis.com/request_count" AND resource.type="cloud_run_revision" AND resource.label.service_name="xeref" AND metric.label.response_code_class="5xx"'
+        comparison: "COMPARISON_GT"
+        thresholdValue: 5
+        duration: "300s" # 5 minutes
+        aggregations:
+        - alignmentPeriod: "60s"
+          perSeriesAligner: "ALIGN_SUM"
+        trigger:
+          count: 1
+
+  alertStrategy:
+    notificationRateLimit:
+      period: "1800s" # 30 minutes
+  documentation:
+    content: "This policy triggers alerts for application-level performance issues, such as high memory usage, slow response times, or an increase in server errors. Investigate service logs and performance traces."
+    mimeType: "text/markdown"
+  notificationChannels:
+    - "projects/xerefai/notificationChannels/placeholder-email"
+    - "projects/xerefai/notificationChannels/placeholder-pagerduty"

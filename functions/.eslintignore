@@ -1,0 +1,3 @@
+# .eslintignore
+# This file tells ESLint to ignore the legacy functions directory.
+src/legacy/

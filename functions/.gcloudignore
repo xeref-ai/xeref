@@ -1,0 +1,3 @@
+# .gcloudignore
+# This file tells the gcloud CLI to ignore the legacy functions directory.
+/src/legacy/
