@@ -1,0 +1,104 @@
+name: Coordinated Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-versions:
+    name: Validate Code ↔️ Infra Versions
+    runs-on: ubuntu-latest
+    outputs:
+      code-version: ${{ steps.check.outputs.code-version }}
+      infra-version: ${{ steps.check.outputs.infra-version }}
+      required-infra-range: ${{ steps.check.outputs.required-infra-range }}
+      compatible: ${{ steps.check.outputs.compatible }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install semver
+        run: npm install -g semver
+
+      - name: Extract and Validate Versions
+        id: check
+        run: |
+          CODE_VERSION=$(node -p "require('./package.json').version")
+          REQUIRED_INFRA_RANGE=$(node -p "require('./package.json').config.requiredInfraVersion")
+          CURRENT_INFRA_VERSION=$(grep '^version' terraform/version.tf | cut -d'\"' -f2)
+          
+          echo "code-version=$CODE_VERSION" >> $GITHUB_OUTPUT
+          echo "infra-version=$CURRENT_INFRA_VERSION" >> $GITHUB_OUTPUT
+          echo "required-infra-range=$REQUIRED_INFRA_RANGE" >> $GITHUB_OUTPUT
+          
+          if semver "$CURRENT_INFRA_VERSION" -r "$REQUIRED_INFRA_RANGE"; then
+            echo "compatible=true" >> $GITHUB_OUTPUT
+            echo "✅ Infra version $CURRENT_INFRA_VERSION is compatible with required range $REQUIRED_INFRA_RANGE"
+          else
+            echo "compatible=false" >> $GITHUB_OUTPUT
+            echo "::error::Incompatible infra version $CURRENT_INFRA_VERSION for code $CODE_VERSION. Required range: $REQUIRED_INFRA_RANGE"
+            exit 1
+          fi
+
+  deploy-infrastructure:
+    name: Deploy Infrastructure (${{ matrix.environment }})
+    needs: validate-versions
+    if: needs.validate-versions.outputs.compatible == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        include:
+          - environment: staging
+            project_id: xerefai-staging
+          - environment: production
+            project_id: xerefai
+    
+    environment: ${{ matrix.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform -chdir=terraform/environments/${{ matrix.environment }} init \
+            -backend-config="bucket=xerefai-${{ matrix.environment }}-tfstate" \
+            -backend-config="prefix=infrastructure"
+        
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform -chdir=terraform/environments/${{ matrix.environment }} plan \
+            -var="project_id=${{ matrix.project_id }}" \
+            -var="deployment_version=${{ needs.validate-versions.outputs.code-version }}" \
+            -var="git_commit=${{ github.sha }}" \
+            -var="organization_id=${{ secrets.GOOGLE_ORG_ID }}" \
+            -var="billing_account=${{ secrets.GCP_BILLING_ACCOUNT_ID }}" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform -chdir=terraform/environments/${{ matrix.environment }} apply -auto-approve tfplan
