@@ -6,16 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Rocket } from 'lucide-react';
 
 const ChangelogTag = ({ type, text }: { type: string, text: string }) => {
-  const typeStyles = {
+  const typeStyles: { [key: string]: string } = {
     New: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
     Improved: 'bg-green-500/20 text-green-300 border-green-500/30',
     Fixed: 'bg-red-500/20 text-red-300 border-red-500/30',
+    Docs: 'bg-gray-500/20 text-gray-300 border-gray-500/30',
+    Strategy: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
   };
-
-  const style = typeStyles[type as keyof typeof typeStyles] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+  const style = typeStyles[type] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
 
   return (
     <div className="flex items-start space-x-3">
@@ -26,8 +27,7 @@ const ChangelogTag = ({ type, text }: { type: string, text: string }) => {
 };
 
 const ChangelogPage = () => {
-  // Display only the latest 10 updates
-  const recentVersions = changelogData.versions.slice(0, 10);
+  const recentVersions = changelogData.versions; // Show all versions
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -40,31 +40,22 @@ const ChangelogPage = () => {
         </header>
 
         <Card className="mb-12 bg-gradient-to-r from-purple-500/10 to-indigo-600/10 border-purple-500/20">
-          <CardHeader>
-            <CardTitle className="text-xl">Want the full story?</CardTitle>
-            <CardDescription>
-              In Xerenity Society, Bugra has documented every step of building Xeref from $0 to over $10,000 MRR.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link href="https://www.skool.com/bugrakarsli1" target="_blank">
-                Join the Community <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
+          {/* ... Community Card ... */}
         </Card>
 
         <div className="space-y-12">
-          {recentVersions.map((entry) => (
+          {recentVersions.map((entry, idx) => (
             <Card key={entry.version} className="bg-card border-border/40">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-3xl font-bold">v{entry.version}</CardTitle>
+                  <CardTitle className="text-3xl font-bold flex items-center gap-2">
+                    {entry.version}
+                    {idx === 0 && <Rocket className="h-6 w-6 text-purple-400" />}
+                  </CardTitle>
                   <Badge variant="secondary">{entry.date}</Badge>
                 </div>
                 <CardDescription className="pt-2">
-                  {entry.version === changelogData.latestVersion && "The latest and greatest from the Xeref.ai team."}
+                  {entry.version === changelogData.latestVersion && "Future planned updates for the next version."}
                 </CardDescription>
               </CardHeader>
               <Separator />

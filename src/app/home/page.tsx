@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { Loader2 } from 'lucide-react';
 import { IconSidebar } from '@/components/icon-sidebar';
@@ -23,17 +22,17 @@ import { WorkflowView } from '@/components/workflow-view';
 import { type Message, type Task, type Idea, type TaskStatus } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import {
-  addTaskToFirestore,
+  addTask,
   getTasksFromFirestore,
   getIdeasFromFirestore,
-  addIdeaToFirestore,
-  deleteIdeaFromFirestore,
-  updateTaskInFirestore,
-  deleteArchivedTasksFromFirestore,
-  updateUserContextInFirestore
+  addIdea,
+  deleteIdea,
+  updateTask,
+  deleteArchivedTasks,
+  updateUserContext
 } from '@/lib/firestore';
 import { serverTimestamp } from 'firebase/firestore';
-import { TodayFocusPanel } from '@/components/today-focus-panel';
+import TodayFocusPanel from '@/components/today-focus-panel';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   ResizableHandle,
@@ -243,13 +242,13 @@ export default function HomePage() {
   const handleAddIdea = async (text: string) => {
     if (!user) return;
     const newIdea = { text };
-    const id = await addIdeaToFirestore(user.uid, newIdea);
+    const id = await addIdea(user.uid, newIdea);
     setIdeas(prev => [{ id, ...newIdea, createdAt: new Date() }, ...prev]);
   };
 
   const handleDeleteIdea = async (id: string) => {
     if (!user) return;
-    await deleteIdeaFromFirestore(user.uid, id);
+    await deleteIdea(user.uid, id);
     setIdeas(prev => prev.filter(idea => idea.id !== id));
   };
 
@@ -265,7 +264,7 @@ export default function HomePage() {
       source: taskDetails.source,
       priority: 'Easy'
     };
-    const id = await addTaskToFirestore(user.uid, newTask);
+    const id = await addTask(user.uid, newTask);
     setTasks(prev => [{ id, ...newTask, createdAt: new Date() }, ...prev]);
   };
 
@@ -280,7 +279,7 @@ export default function HomePage() {
           status: newStatus,
           completedAt: isDone ? null : serverTimestamp()
       };
-      await updateTaskInFirestore(user.uid, id, updates);
+      await updateTask(user.uid, id, updates);
       setTasks(tasks.map(t => 
           t.id === id ? { ...t, status: newStatus, completedAt: isDone ? null : new Date() } : t
       ));
@@ -289,7 +288,7 @@ export default function HomePage() {
   const handleArchiveTask = async (id: string) => {
     if (!user) return;
     const updates: Partial<Task> = { status: 'archived' };
-    await updateTaskInFirestore(user.uid, id, updates);
+    await updateTask(user.uid, id, updates);
     // Optimistically update UI
     setTasks(prevTasks => prevTasks.map(t => t.id === id ? { ...t, status: 'archived' } : t));
     toast({ description: "Task moved to completed." });
@@ -298,7 +297,7 @@ export default function HomePage() {
   const handleUnarchiveTask = async (id: string) => {
     if (!user) return;
     const updates: Partial<Task> = { status: 'todo', completedAt: null };
-    await updateTaskInFirestore(user.uid, id, updates);
+    await updateTask(user.uid, id, updates);
     // Optimistically update UI
     setTasks(prevTasks => prevTasks.map(t => t.id === id ? { ...t, status: 'todo', completedAt: null } : t));
     toast({ description: "Task restored." });
@@ -307,14 +306,14 @@ export default function HomePage() {
   const handleDeleteAllArchived = async () => {
     if (!user || archivedTasks.length === 0) return;
     const taskIdsToDelete = archivedTasks.map(t => t.id);
-    await deleteArchivedTasksFromFirestore(user.uid, taskIdsToDelete);
+    await deleteArchivedTasks(user.uid, taskIdsToDelete);
     setTasks(activeTasks);
     toast({ description: "All completed tasks deleted." });
   };
 
   const handleSaveUserContext = async (context: string) => {
     if (user) {
-      await updateUserContextInFirestore(user.uid, context);
+      await updateUserContext(user.uid, { context });
       if (isClient) {
         localStorage.setItem('hasSeenUserContext', 'true');
       }
