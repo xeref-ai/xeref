@@ -25,7 +25,7 @@ export const sendMessage = async (message: Message, useEnhancer: boolean) => {
   }
 
   let endpoint = '/api/chat/vertex';
-  if (message.model?.startsWith('GPT-5')) {
+  if (message.model?.startsWith('GPT')) {
     endpoint = '/api/chat/openai';
   } else if (message.model === 'Gemini CLI') {
     endpoint = '/api/chat/gemini-cli';
@@ -36,7 +36,7 @@ export const sendMessage = async (message: Message, useEnhancer: boolean) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ prompt: message.text }),
+    body: JSON.stringify({ prompt: message.text, model: message.model }),
   });
 
   const { response: responseText } = await response.json();

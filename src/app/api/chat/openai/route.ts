@@ -8,14 +8,14 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { prompt } = await req.json();
+    const { prompt, model } = await req.json();
 
     if (!prompt) {
       return new NextResponse('Prompt is required', { status: 400 });
     }
 
     const stream = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: model || 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
       stream: true,
     });
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     for await (const chunk of stream) {
       responseText += chunk.choices[0]?.delta?.content || "";
     }
-    
+
     return NextResponse.json({ response: responseText });
 
   } catch (error) {

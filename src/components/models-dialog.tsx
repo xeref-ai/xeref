@@ -3,27 +3,25 @@
 
 import React from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Check, ChevronDown, Star } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 
-const models = [
-    { id: 'GPT 4.1', name: 'GPT 4.1', isPro: false },
-    { id: 'GPT 4o', name: 'GPT 4o', isPro: true },
-    { id: 'Gemini Pro', name: 'Gemini Pro', isPro: true },
-];
+import { AI_MODELS } from '@/constants';
+
+const models = AI_MODELS;
 
 export const ModelsDialog = ({ value, onValueChange, user }: { value: string, onValueChange: (value: string) => void, user: any }) => {
     const { isUltraUser } = useAuth();
-    
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -55,11 +53,11 @@ export const ModelsDialog = ({ value, onValueChange, user }: { value: string, on
                 </div>
                 {!isUltraUser && (
                     <DialogFooter>
-                       <div className="text-center w-full text-sm text-muted-foreground mt-4">
-                            Logged in as {user?.displayName || user?.email || 'Guest'}. 
+                        <div className="text-center w-full text-sm text-muted-foreground mt-4">
+                            Logged in as {user?.displayName || user?.email || 'Guest'}.
                             <Link href="/pricing" className="underline text-primary ml-1">
                                 Upgrade to Pro
-                            </Link> 
+                            </Link>
                             {' '}for advanced models.
                         </div>
                     </DialogFooter>

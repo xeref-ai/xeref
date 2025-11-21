@@ -46,6 +46,9 @@ type AppSettings = {
   useWebSearch: boolean;
 };
 
+import { ChangelogModal } from '@/components/changelog-modal';
+import { KeyboardShortcutsModal } from '@/components/keyboard-shortcuts-modal';
+
 export default function HomePage() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
@@ -55,11 +58,22 @@ export default function HomePage() {
   const [activeRightView, setActiveRightView] = useState<RightPanelView>('tasks');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isBotThinking, setIsBotThinking] = useState(false);
-  const [settings, setSettings] = useLocalStorage<AppSettings>('app-settings', { /* ... */ });
+  const [settings, setSettings] = useLocalStorage<AppSettings>('app-settings', {
+    model: 'gemini-1.5-flash',
+    temperature: 0.7,
+    systemPrompt: '',
+    useWebSearch: false,
+    darkMode: true,
+    notifications: true,
+    privacyMode: false
+  });
   const chatInputRef = useRef<HTMLTextAreaElement>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
+
+  const [isChangelogOpen, setIsChangelogOpen] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
 
   // All component logic and hooks would be here...
 
@@ -83,53 +97,57 @@ export default function HomePage() {
           onToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
         />
         {!isSidebarCollapsed && <LeftSidebar />}
-        
+
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           <ResizablePanel defaultSize={60} minSize={30}>
             <CenterContent
-               user={user}
+              user={user}
               messages={messages}
               isLoading={isBotThinking}
               handleSendMessage={(msg) => { /* Placeholder */ }}
-              handleNewChat={() => {}}
+              handleNewChat={() => { }}
               chatMode="agent"
-              setChatMode={() => {}}
+              setChatMode={() => { }}
               settings={settings}
               setSettings={setSettings}
               chatInputRef={chatInputRef}
               input=""
-              setInput={() => {}}
+              setInput={() => { }}
               setMessages={setMessages}
               filePreview={null}
-              setFilePreview={() => {}}
+              setFilePreview={() => { }}
               attachedFile={null}
-              setAttachedFile={() => {}}
+              setAttachedFile={() => { }}
               isFocusModalOpen={false}
-              setIsFocusModalOpen={() => {}}
+              setIsFocusModalOpen={() => { }}
             />
           </ResizablePanel>
 
           <ResizableHandle withHandle />
-          
+
           <ResizablePanel defaultSize={40} minSize={30}>
-              <div className='h-full w-full flex'>
-                  <div className='flex-grow h-full'>
-                      {activeRightView === 'tasks' && <TasksView activeTasks={[]} isLoading={false} toggleTaskCompletion={()=>{}} archiveTask={()=>{}} onViewArchived={() => setActiveRightView('archived')} onClose={() => setActiveRightView(null)} onOpenGuestProfile={()=>{}} />}
-                      {/* Other views */}
-                  </div>
-                  <RightNav 
-                      activeView={activeRightView} 
-                      setActiveRightView={setActiveRightView}
-                      openFeedbackDialog={() => {}}
-                      openAddEventDialog={() => {}}
-                      openPostToSkoolDialog={() => {}}
-                      openTeamBuilder={() => {}}
-                      openSearchDialog={() => {}}
-                  />
+            <div className='h-full w-full flex'>
+              <div className='flex-grow h-full'>
+                {activeRightView === 'tasks' && <TasksView activeTasks={[]} isLoading={false} toggleTaskCompletion={() => { }} archiveTask={() => { }} onViewArchived={() => setActiveRightView('archived')} onClose={() => setActiveRightView(null)} onOpenGuestProfile={() => { }} />}
+                {activeRightView === 'settings' && <SettingsPanel settings={settings} setSettings={setSettings} onClose={() => setActiveRightView(null)} user={user} theme="dark" onToggleTheme={() => { }} />}
+                {/* Other views */}
               </div>
+              <RightNav
+                activeView={activeRightView}
+                setActiveRightView={setActiveRightView}
+                openFeedbackDialog={() => { }}
+                openAddEventDialog={() => { }}
+                openPostToSkoolDialog={() => { }}
+                openSearchDialog={() => { }}
+                openChangelog={() => setIsChangelogOpen(true)}
+                openKeyboardShortcuts={() => setIsShortcutsOpen(true)}
+              />
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+      <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
+      <KeyboardShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
     </>
   );
 }
