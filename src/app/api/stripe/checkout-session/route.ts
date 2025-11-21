@@ -4,8 +4,8 @@ import { stripe } from '@/lib/stripe';
 import { auth } from '@/lib/firebase-admin';
 
 export async function POST(req: Request) {
-  if (!auth) {
-    return new NextResponse('Firebase Admin not initialized', { status: 500 });
+  if (!auth || !stripe) {
+    return new NextResponse('Firebase Admin or Stripe not initialized', { status: 500 });
   }
 
   try {

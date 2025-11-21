@@ -1,24 +1,49 @@
 
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { ChatHeader } from '@/components/chat-header/chat-header';
 import { ChatInterface } from '@/components/chat/chat-interface';
-import { LogoSvg } from '@/components/icons';
+import { type Message } from '@/lib/types';
 
 const ChatPage = () => {
-    const chatInterfaceRef = useRef<{ handleNewChat: () => void }>(null);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [isBotThinking, setIsBotThinking] = useState(false);
 
-    const handleNewChat = () => {
-        if (chatInterfaceRef.current) {
-            chatInterfaceRef.current.handleNewChat();
-        }
+    const handleResetChat = () => {
+        setMessages([]);
+    }
+
+    const handleSendMessage = async (content: string) => {
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            content,
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setIsBotThinking(true);
+
+        // Simulate bot response
+        setTimeout(() => {
+            const botMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: 'I received your message. This is a placeholder response.',
+            };
+            setMessages(prev => [...prev, botMessage]);
+            setIsBotThinking(false);
+        }, 1000);
     }
 
     return (
         <div className="flex flex-col h-full bg-card border-r border-border">
-            <ChatHeader onNewChat={handleNewChat} />
-            <ChatInterface ref={chatInterfaceRef} onNewChat={handleNewChat} />
+            <ChatHeader handleResetChat={handleResetChat} />
+            <ChatInterface
+                messages={messages}
+                onSendMessage={handleSendMessage}
+                isBotThinking={isBotThinking}
+            />
         </div>
     )
 }

@@ -5,8 +5,8 @@ import { db } from '@/lib/firebase-admin';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
-  if (!db) {
-    return new NextResponse('Firebase Admin not initialized', { status: 500 });
+  if (!db || !stripe) {
+    return new NextResponse('Firebase Admin or Stripe not initialized', { status: 500 });
   }
 
   const body = await req.text();

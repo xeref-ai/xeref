@@ -498,14 +498,20 @@ const SidebarMenu = React.forwardRef<
 ))
 SidebarMenu.displayName = "SidebarMenu"
 
+import Link from "next/link"
+
+// ... (existing imports)
+
 const SidebarMenuVectorization = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
 >(({ className, ...props }, ref) => (
   <li ref={ref} className={cn("relative", className)} {...props}>
-    <SidebarMenuButton href={"/vectorization"} tooltip={"Vectorization Tool"}>
-      <ImageIcon className={"size-4"}/>
-      <span>Vectorization Tool</span>
+    <SidebarMenuButton asChild tooltip={"Vectorization Tool"}>
+      <Link href={"/vectorization"}>
+        <ImageIcon className={"size-4"} />
+        <span>Vectorization Tool</span>
+      </Link>
     </SidebarMenuButton>
   </li>
 ))
@@ -627,7 +633,7 @@ const SidebarMenuAction = React.forwardRef<
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className
       )}
       {...props}

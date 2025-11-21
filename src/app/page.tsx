@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LogoSvg } from '@/components/icons';
 import { useAuth } from '@/lib/auth';
-import { analytics } from '@/lib/firebase';
+import { getFirebaseServices } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
 
 export default function WelcomeOrHomePage() {
@@ -21,7 +21,9 @@ export default function WelcomeOrHomePage() {
   }, [user, isInitialLoading, router]);
 
 
+
   const handleCTAClick = () => {
+    const { analytics } = getFirebaseServices();
     if (analytics) {
       logEvent(analytics, 'hero_cta_clicked');
     }
@@ -51,7 +53,7 @@ export default function WelcomeOrHomePage() {
         <p className="mt-3 max-w-md mx-auto text-lg text-muted-foreground sm:text-xl md:mt-5 md:max-w-2xl">
           Xeref.ai supercharges your productivity with AI Agents that work 24/7 on your tasks - using the world's smartest AI models.
         </p>
-        
+
         <div className="mt-10">
           <Button asChild size="lg" onClick={handleCTAClick}>
             <Link href="/login">

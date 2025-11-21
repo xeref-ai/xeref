@@ -1,5 +1,5 @@
 import { type User } from "firebase/auth";
-import { adminAuth } from "./firebase-admin";
+import { auth as adminAuth } from "./firebase-admin";
 
 const ULTRA_USERS = [
     'bugrakarsli@gmail.com',

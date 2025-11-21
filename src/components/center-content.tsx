@@ -47,7 +47,7 @@ import { LogoSvg, SparkleIcon } from '@/components/icons';
 import { useAuth } from '@/lib/auth';
 import { TodayFocusPanel } from '@/components/today-focus-panel';
 import { CaseStudyCarousel } from '@/components/case-study-carousel';
-import { analytics } from '@/lib/firebase';
+import { getFirebaseServices } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
 
 type AppSettings = {
@@ -55,6 +55,9 @@ type AppSettings = {
     temperature: number;
     systemPrompt: string;
     useWebSearch: boolean;
+    darkMode: boolean;
+    notifications: boolean;
+    privacyMode: boolean;
 };
 
 const OnboardingPopup = () => (
@@ -194,7 +197,7 @@ export const CenterContent = ({
             return;
         }
 
-        const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (!SpeechRecognition) {
             toast({ title: "Voice Input Not Supported", variant: "destructive" });
             return;
@@ -272,7 +275,10 @@ export const CenterContent = ({
                             <span>xeref</span> / <span className="text-foreground font-medium">today's tasks</span>
                         </div>
                     ) : (
-                        <Button asChild size="sm" onClick={() => logEvent(analytics, 'upgrade_button_clicked')}>
+                        <Button asChild size="sm" onClick={() => {
+                            const { analytics } = getFirebaseServices();
+                            if (analytics) logEvent(analytics, 'upgrade_button_clicked');
+                        }}>
                             <Link href="/pricing">
                                 <ArrowUp size={14} className="mr-2" /> Upgrade to PRO
                             </Link>

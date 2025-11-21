@@ -15,18 +15,17 @@ import { NotesView } from '@/components/notes-view';
 import { ArchivedTasksView } from '@/components/archived-tasks-view';
 import { SettingsPanel } from '@/components/settings-panel';
 import { WorkflowView } from '@/components/workflow-view';
-import { CalendarView } from '@/components/calendar-view';
 import { type Message, type Task, type Idea, type TaskStatus } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import {
-  addTask,
+  addTaskToFirestore as addTask,
   getTasksFromFirestore,
   getIdeasFromFirestore,
-  addIdea,
-  deleteIdea,
-  updateTask,
-  deleteArchivedTasks,
-  updateUserContext
+  addIdeaToFirestore as addIdea,
+  deleteIdeaFromFirestore as deleteIdea,
+  updateTaskInFirestore as updateTask,
+  deleteArchivedTasksFromFirestore as deleteArchivedTasks,
+  updateUserContextInFirestore as updateUserContext
 } from '@/lib/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import {
@@ -37,13 +36,16 @@ import {
 import { cn } from '@/lib/utils';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
-type RightPanelView = 'tasks' | 'ideas' | 'notes' | 'settings' | 'archived' | 'workflow' | 'calendar' | null;
+type RightPanelView = 'tasks' | 'ideas' | 'notes' | 'settings' | 'archived' | 'workflow' | 'calendar' | 'google-calendar' | 'add-event' | 'team-builder' | null;
 
 type AppSettings = {
   model: string;
   temperature: number;
   systemPrompt: string;
   useWebSearch: boolean;
+  darkMode: boolean;
+  notifications: boolean;
+  privacyMode: boolean;
 };
 
 import { ChangelogModal } from '@/components/changelog-modal';
@@ -95,6 +97,8 @@ export default function HomePage() {
         <IconSidebar
           isCollapsed={isSidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
+          onNewProjectClick={() => {/* TODO: implement new project */ }}
+          onEditProjectClick={() => {/* TODO: implement edit project */ }}
         />
         {!isSidebarCollapsed && <LeftSidebar />}
 

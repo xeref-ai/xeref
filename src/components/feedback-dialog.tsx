@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Paperclip, Send, X } from 'lucide-react';
+import { Paperclip, Send, X, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
 interface FeedbackDialogProps {
@@ -90,11 +90,11 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = ({ open, onOpenChan
 
   const handleFileAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-        setScreenshotFile(e.target.files[0]);
-        toast({
-            title: "Screenshot Attached",
-            description: `${e.target.files[0].name}`,
-        });
+      setScreenshotFile(e.target.files[0]);
+      toast({
+        title: "Screenshot Attached",
+        description: `${e.target.files[0].name}`,
+      });
     }
   };
 
@@ -114,24 +114,24 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = ({ open, onOpenChan
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-           <div className="text-xs text-muted-foreground">
-              We may email you for more information or updates. Some account and system information may be sent to Google. We will use it to fix problems and improve our services, subject to our Privacy Policy and Terms of Service.
-           </div>
+          <div className="text-xs text-muted-foreground">
+            We may email you for more information or updates. Some account and system information may be sent to Google. We will use it to fix problems and improve our services, subject to our Privacy Policy and Terms of Service.
+          </div>
         </div>
         <DialogFooter className="flex justify-between items-center w-full">
-            <div>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    onChange={handleFileAttach}
-                    accept="image/*"
-                />
-                 <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                    <Paperclip className="h-4 w-4 mr-2" />
-                    Attach Screenshot
-                 </Button>
-            </div>
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileAttach}
+              accept="image/*"
+            />
+            <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+              <Paperclip className="h-4 w-4 mr-2" />
+              Attach Screenshot
+            </Button>
+          </div>
           <div className="flex gap-2">
             <DialogClose asChild>
               <Button variant="ghost">Cancel</Button>
